@@ -8,9 +8,9 @@
 		{{ $s := systemSettings "website_maintenance" "game_maintenance" "website_global_alert" }}
 		{{ with $s.website_maintenance.Int }}
 		<link rel="stylesheet" type="text/css" href="/static/maintenance.css?{{ unixNano }}">
-		<script src="https://kit.fontawesome.com/fdf0b80f23.js" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Maintenance - Ainu</title>
+		<title>Maintenance - Fuquila</title>
 	</head>
 		{{ else }}
 		<noscript>
@@ -31,9 +31,9 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>{{ if .TitleBar }}{{ .T .TitleBar }}{{ end }} {{ .T "- Ainu" }}</title>
+		<title>{{ if .TitleBar }}{{ .T .TitleBar }}{{ end }} {{ .T "- Fuquila" }}</title>
 
-		<link rel="stylesheet" type="text/css" href="/static/{{ if $ds }}dark/{{ end }}semantic.min.css?{{ unixNano }}">
+		<link rel="stylesheet" type="text/css" href="/static/semantic.min.css?{{ unixNano }}">
 		<link rel="stylesheet" type="text/css" href="/static/ripple.css?{{ unixNano }}">
 	{{ end }}
 	</head>
@@ -53,7 +53,7 @@
 		</div>
 	</body>
 	{{ else }}
-	<body {{ if $ds }} class="ds"{{ end }}>
+	<body class="ds">
 		{{/*
 			If we're asked to disable the hugeheading, but a KyutGrill is set, it will become the background of the page.
 			This is mainly used in user profiles, allowing users to set their profile background.
@@ -79,7 +79,7 @@
 				<noscript>Research has proven this website works 10000% better if you have JavaScript enabled.</noscript>
 				{{ if and .Context.User.Username (not (has .Context.User.Privileges 1)) }}
 					<div class="ui warning message">
-						{{ $.T "Your account is currently in restricted mode. You will not be able to do certain actions, and your profile can only be seen by you and by Ainu!'s staff. If you believe we have mistaken putting you in restricted mode, or a month has passed since you first saw this, then you can send an appeal at <a href='https://discord.gg/CEjWW4K'>our Discord</a>." | html }}
+						{{ $.T "Your account is currently in restricted mode. You will not be able to do certain actions, and your profile can only be seen by you and by Fuquila's staff. If you believe we have mistaken putting you in restricted mode, or a month has passed since you first saw this, then you can send an appeal at <a href='https://discord.gg/CEjWW4K'>our Discord</a>." | html }}
 					</div>
 				{{ end }}
 				{{ if .Messages }}
@@ -90,11 +90,6 @@
 							</div>
 						{{ end }}
 				{{ end }}
-				{{ if eq .Context.User.ID 2193 }}
-				<div class="ui error message">
-					<h1>GIVE LIVEPLAY TO SIMON OR GAY. you got 3 days to do it owo</h1>
-				</div>
-				{{ end }}
 				{{ $settings := systemSettings "website_maintenance" "game_maintenance" "website_global_alert" }}
 				{{ with $settings.website_global_alert.String }}
 					<div class="ui warning message">
@@ -103,7 +98,7 @@
 				{{ end }}
 				{{ with $settings.game_maintenance.Int }}
 					<div class="ui warning message">
-						{{ $.T "Ainu!'s score submission is currently in maintenance mode. You will not be allowed to submit scores for the time being." }}
+						{{ $.T "Fuquila's game servers are currently in maintenance mode. You will not be able to submit scores for the time being." }}
 					</div>
 				{{ end }}
 				</div>
@@ -112,11 +107,10 @@
 			<br />
 			<center>
 			    <div class="footer twemoji">
-			        <font style='color:black'>
-			            {{ if $ds }}<font style='color:white'>{{ end }}
-			                {{ .T "&copy; 2018-%d Ripple, osu!Ainu, Made with love by Aoba ❤ using Hanayo %s" (curryear) (version) | html }} |
+			        <font style='color: white'>
+			                {{ .T "&copy; 2018-%d Ripple, osu!Fuquila, Made with love by Aochi ❤ using Hanayo %s" (curryear) (version) | html }} |
 			                <a href="/team" title='{{ .T "Who is working on this thing?" }}'><i class="users icon"></i>{{ .T "Team" }}</a> |
-							<a href="https://github.com/osuthailand" title="{{ .T "What's going on under the hood?"}}{{/*'"*/}}"><i class="git square icon"></i></a>
+							<a href="https://github.com/osufuquila" title="{{ .T "What's going on under the hood?"}}{{/*'"*/}}"><i class="git square icon"></i></a>
 			                <div class="ui scrolling dropdown" style="margin-left: 5px;" id="language-selector">
 			                    {{ $lang := .Context.Language }}
 			                    {{ with $lang }}
@@ -132,7 +126,7 @@
 			                        {{ end }}
 			                    </div>
 			                </div>
-			                <br>Ainu is not affiliated with ppy Pty Ltd in any way.<br>"osu!" is a trademark of ppy Pty Ltd.
+			                <br>Fuquila is not affiliated with ppy Pty Ltd in any way.<br>"osu!" is a trademark of ppy Pty Ltd.
 			            </font>
 			    </div>
 			</center>

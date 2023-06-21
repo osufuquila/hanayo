@@ -11,16 +11,15 @@ import (
 // TODO: replace with simple ResponseInfo containing userid
 type profileData struct {
 	baseTemplateData
-	UserID int
+	UserID          int
 	Allowedtoreport bool
-
 }
 
 func userProfile(c *gin.Context) {
 	var (
-		userID     int
-		username   string
-		privileges uint64
+		userID          int
+		username        string
+		privileges      uint64
 		allowedtoreport bool
 	)
 
@@ -90,9 +89,9 @@ func userProfile(c *gin.Context) {
 
 func relaxProfile(c *gin.Context) {
 	var (
-		userID     int
-		username   string
-		privileges uint64
+		userID          int
+		username        string
+		privileges      uint64
 		allowedtoreport bool
 	)
 

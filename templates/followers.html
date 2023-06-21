@@ -23,6 +23,13 @@ KyutGrill=friends.jpg
 							<img src="{{ config "AvatarURL" }}/{{ .id }}" alt="Avatar" class="ui mini rounded image"{{ if not (has .privileges 1) }} style="opacity: 0.5"{{ end }}>
 							<div class="content">
 								<a href="/u/{{ .id }}"{{ if not (has .privileges 1) }} style="opacity: 0.5"{{ end }}>{{ .username }}</a>
+								<div class="sub header">
+									<div class="ui compact circular smalltext icon labeled green button"
+										data-userid="{{ .id }}">
+										<i class="plus icon"></i>
+										<span>Mutual</span>
+									</div>
+								</div>
 							</div>
 						</h4>
 					</div>

@@ -1,12 +1,12 @@
 {{ define "navbar" }}
 {{ $isRAP   := and (hasAdmin .Context.User.Privileges) (isRAP .Path) }}
 {{ $isAdmin := hasAdmin .Context.User.Privileges }}
-{{ $isClan := qb "SELECT user, clan FROM user_clans WHERE user = ?" .Context.User.ID }}
+{{ $isClan := qb "SELECT user, clan, perms FROM user_clans WHERE user = ?" .Context.User.ID }}
 {{ $ds      := band .ClientFlags 1 }}
-<div class="ui secondary fixed-height stackable white background main menu no margin bottom{{ if .DisableHH }} dropped{{ end }}" id="navbar">
+<div style="background-image: url('https://fuquila.net/static/navbar.png');" class="ui secondary fixed-height stackable white background main menu no margin bottom{{ if .DisableHH }} dropped{{ end }}" id="navbar">
 	<div class="ui container">
 		<div class="item">
-			<b><a href="/" title="{{ .T "Home page" }}"><img class="ripple logo" src="/static/logos/text-{{ if $ds }}white{{ else }}black{{ end }}.png" alt="Ainu"></a></b>
+			<b><a href="/" title="{{ .T "Home page" }}"><img class="ripple logo" src="/static/logos/text-black.png" alt="Fuquila"></a></b>
 		</div>
 		{{ if $isRAP }}
 			{{/*
@@ -16,51 +16,56 @@
 				the current RAP's sidebar.
 			*/}}
 		{{ else }}
-			{{ navbarItem .Path (.T "Leaderboard") "/leaderboard" }}
 			<div class="ui dropdown item">
-				<span>{{ .T "Community" }}</span>
+				<i class="yellow trophy icon"></i>
+				<div class="menu">
+					{{ navbarItem .Path (.T "PP/Score Leaderboard") "/leaderboard" }}
+					{{ navbarItem .Path (.T "Clan Leaderboard") "/clans" }}
+				</div>
+			</div>
+			<div class="ui dropdown item">
+				<i class="orange users icon"></i>
                 <div class="menu">
                 	{{ navbarItem .Path (.T "Top Plays") "/plays" }}
-                    {{ navbarItem .Path (.T "Multiplayer listing") "https://multi.ainu.pw" }}
-                    {{/* {{ navbarItem .Path (.T "Tournaments") "https://tourn.ainu.pw" }} */}}
                     <div class="divider"></div>
                     {{ navbarItem .Path (.T "Discord Server") .Conf.DiscordServer }}
                 </div>
             </div>
             <div class="ui dropdown item">
-				<span>{{ .T "Help" }}</span>
+				<i class="blue info icon"></i>
 				<div class="menu">
 					{{ navbarItem .Path (.T "About") "/about" }}
+					{{ navbarItem .Path (.T "Team") "/team" }}
 					{{ navbarItem .Path (.T "Rules") "/doc/rules" }}
 					{{ navbarItem .Path (.T "Documentation") "/doc" }}
-					<a class="item" href="{{ .T "/static/serverswitcher_en.exe" }}">{{ .T "Server switcher" }}</a>
 				</div>
 			</div>
 			{{ if .Context.User.Username }}
-			<div class="ui dropdown item">
-				<span>{{ .T "Beatmaps" }}</span>
-				<div class="menu">
-					{{ navbarItem .Path (.T "Request beatmap ranking") "/beatmaps/rank_request" }}
+				<div class="ui dropdown item">
+					<i class="purple database icon"></i>
+					<div class="menu">
+						{{ navbarItem .Path (.T "Request beatmap ranking") "/beatmaps/rank_request" }}
+					</div>
 				</div>
-			</div>
-			<div class="ui dropdown item">
-				<span>{{ .T "Clans" }}</span>
-				<div class="menu">
-					{{ navbarItem .Path (.T "Clan Leaderboard") "/clans?mode=0" }}
-					{{ if ($isClan) }}
-					{{ navbarItem .Path (.T "Clan Settings") "/settings/clansettings" }}
-					{{ else }}
-					{{ end }}
-					{{ if ($isClan) }}
-					{{ else }}
-					<div class="divider"></div>
-					{{ navbarItem .Path (.T "Create Clan") "/clans/create" }}
-					{{ end }}
-				</div>
-			</div>
 			{{ end }}
-			{{ navbarItem .Path (.T "Donate" | printf "<i class=\"red heart icon\"></i>%s") "/donate" }}
-			{{ if $isAdmin }}{{ navbarItem .Path (.T "AAP" | printf "<b>%s</b>") "https://old.ainu.pw/index.php?p=100" }}{{ end }}
+			{{ if .Context.User.Username }}
+				<div class="ui dropdown item">
+					<i class="green address book icon"></i>
+					<div class="menu">
+						{{ if ($isClan) }}
+							{{ navbarItem .Path (.T "Clan Profile") (printf "/c/%s" $isClan.clan) }}
+							{{ if (eq $isClan.perms "8") }}
+								{{ navbarItem .Path (.T "Clan Settings") "/settings/clansettings" }}
+							{{ end }}
+						{{ else }}
+							<div class="divider"></div>
+							{{ navbarItem .Path (.T "Create Clan") "/clans/create" }}
+						{{ end }}
+					</div>
+				</div>
+			{{ end }}
+			{{ navbarItem .Path (printf "<i class=\"red heart icon\"></i>") "/donate" }}
+			{{ if $isAdmin }}{{ navbarItem .Path (printf "<i class=\"blue shield icon\"></i>") "https://old.fuquila.net" }}{{ end }}
 			{{ end }}
 		<div class="firetrucking-right-menu">
 			<div class="item">

@@ -1739,40 +1739,38 @@ p.ranks .rank {
   margin-top: auto;
 }
 
+.status-head {
+    padding:0;
+    margin: 0;
+    text-align: right; 
+    font-size: 35px;
+}
+
+.status-footer {
+    font-size: 20px;
+    text-align: right;
+}
+
+.status-icon {
+    font-size: 4em!important;
+    padding-top: 30px;
+}
 
 .aobaowo {
   transform: translateZ(0);
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 2px;
+  bottom: -75px;
   margin-right: auto!important;
   margin-left: auto!important;
-  height: 442px;
+  height: 492px;
   width: calc(100% - 50px);
-  max-width: 328px;
+  max-width: 461px;
   background-size: contain;
-  background-image: url('/static/images/aoba2.png');
+  background-image: url('/static/femcat.png');
   transition: all 1s;
   filter: brightness(0.6);
-}
-
-@media(max-width: 991px) {
-    .disappearplease {
-        display:none!important
-    }
-    .bigfunnylol {
-      display: block!important;
-      background-image: url('/static/images/image0_1.jpg');
-      width:  732px;
-      height: 500px;
-      background-size: 154%;
-      background-position-x: -263px;
-      background-position-y: -225px;
-    }
-    .penis-above {
-      top: 38%;
-    }
 }
 
 @media(max-width: 596px) {

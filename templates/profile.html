@@ -4,19 +4,19 @@
 		<div class="ui container" style="font-family: 'Exo 2', sans-serif;">
 			{{ if .UserID }}
 				{{ $gqm := atoi (.Gin.Query "mode") }}
-				{{ $instinctly := eq .UserID 1911 }}
+				{{ $instinctly := eq .UserID -1 }}
 				{{ $global := . }}
 				{{ with (.Get "users/full?id=%d" .UserID) }}
 					{{ $favouritemode := _or $gqm .favourite_mode }}
-					<meta property="og:type" content="website" />
-					<meta property="og:url" content="https://ainu.pw/u/{{ .id }}" />
-					<meta property="og:title" content={{ $global.T "<b>%s</b>" .username}} />
-					<meta property="og:description" content={{ $global.T "<b>%s</b> is a osu!Ainu player from <b>%s</b>." .username (country .country true)}} />
-					<meta property="og:image" content="{{ config "AvatarURL" }}/{{ .id }}" />
 					<script>
 						window.favouriteMode = {{ $favouritemode }};
 						window.userID = {{ .id }};
 					</script>
+					<meta property="og:type" content="website" />
+					<meta property="og:url" content="https://fuquila.net/u/{{ .id }}" />
+					<meta property="og:title" content={{ $global.T "<b>%s</b>" .username}} />
+					<meta property="og:description" content={{ $global.T "<b>%s</b> is a Fuquila player from <b>%s</b>." .username (country .country true)}} />
+					<meta property="og:image" content="{{ config "AvatarURL" }}/{{ .id }}" />
 					{{ if after .silence_info.end }}
 						<div class="ui error centered message">{{ $global.T "User is <b>silenced</b> for %s, expires %s." (.silence_info.reason | htmlescaper) (time .silence_info.end) | html }}</div>
 					{{ end }}
@@ -52,11 +52,15 @@
 										<div class="kpw--info--block">
 											<div class="ui header" style="font-size: 2em;">
 												<p class="ranks">
-													<span class="bgf">{{ .username }}</span>
-													{{ range $k, $v := (slice .std .taiko .ctb .mania) }}
+													{{ if .clan.id }}
+														<span class="bgf"><a href="https://fuquila.net/c/{{ .clan.id }}">[{{ .clan.tag }}]</a> {{ .username }}</span>
+													{{ else }}
+														<span class="bgf">{{ .username }}</span>
+													{{ end }}
+													{{ range $k, $v := (slice .stats.vn.std .stats.vn.taiko .stats.vn.ctb .stats.vn.mania) }}
 													<span class="rank" data-mode="{{ $k }}"{{ if ne $k (int $favouritemode) }} hidden{{ end }}>({{ with and $v $v.global_leaderboard_rank }}#{{ . }}{{ else }}{{ $global.T "Unknown" }}{{ end }})</span>
 													{{ end }}
-													{{ if and (.badges) (.custom_badge) }}
+													{{ if or (.badges) (.custom_badge) }}
 															{{ range .badges }}
 																<span class data-tooltip="{{ .name }}" data-inverted="">
 																	<i class="{{ faIcon .icon }} small icon"></i>
@@ -112,12 +116,12 @@
 
 									{{ $global.T "<b>%s</b> is a" .username | html}}
 
-									{{ $owner := (has .privileges 3145727) }}
-									{{ $cm := (has .privileges 15662587) }}
-									{{ $admin := (has .privileges 950527) }}
-									{{ $dev := (has .privileges 1043995) }}
+									{{ $owner := (has .privileges 955252735) }}
+									{{ $cm := (has .privileges 942669819) }}
+									{{ $admin := (has .privileges 806257147) }}
+									{{ $mod := (has .privileges 537694459) }}
+									{{ $mod2 := (has .privileges 537694715) }}
 									{{ $bat := (has .privileges 267) }}
-									{{ $member := (has .privileges 3) }}
 									<b>
 										{{ if $owner }}
 										{{ $global.T "Owner" }}
@@ -125,14 +129,13 @@
 										{{ $global.T "Community Manager" }}
 										{{ else if $admin }}
 										{{ $global.T "Admin" }}
-										{{ else if $dev }}
-										{{ $global.T "Developer" }}
+										{{ else if or $mod $mod2 }}
+										{{ $global.T "Moderator" }}
 										{{ else if $bat }}
 										{{ $global.T "BAT" }}
-										{{ else if $member }}
-										{{ $global.T "Player" }}
 										{{ else }}
-										{{end}}
+										{{ $global.T "Player" }}
+										{{ end }}
 									</b>
 									{{ $global.T "from <b>%s</b>." (country .country true) | html }}
 									<br>{{ $global.T "They signed up on %s." (time $user.registered_on) | html }}
@@ -140,7 +143,7 @@
 									<br>{{ with playstyle .play_style $global }}{{ $global.T "They play with %s." . }}{{ end }}
 								</div>
 								<div class="sixteen wide column">
-									{{ range $k, $v := (slice .std .taiko .ctb .mania) }}
+									{{ range $k, $v := (slice .stats.vn.std .stats.vn.taiko .stats.vn.ctb .stats.vn.mania) }}
 									{{ $maxcombo := qb "SELECT FORMAT(scores.max_combo,0) AS combo FROM scores WHERE userid = ? ORDER BY max_combo DESC;" $.UserID}}
 										<div data-mode="{{ $k }}" {{ if ne $k (int $favouritemode) }} hidden{{ end }}>
 											<table class="ui very basic two column compact table nopad">
@@ -192,22 +195,6 @@
 														<td><b>{{ $global.T "Accuracy" }}</b></td>
 														<td class="right aligned">{{ printf "%.2f" .accuracy }}%</td>
 													</tr>
-													<tr>
-														<td><img class="kpw--profile--stats--rank" alt="Ranks SS+" src="https://kurikku.pw/static/ranking-icons/SSHD.png"></td>
-														<td class="right aligned" id="XH"></td>
-													</tr>
-													<tr>
-														<td><img class="kpw--profile--stats--rank" alt="Ranks SS" src="https://kurikku.pw/static/ranking-icons/SS.png"></td>
-														<td class="right aligned" id="X"></td>
-													</tr>
-													<tr>
-														<td><img class="kpw--profile--stats--rank" alt="Ranks S+" src="https://kurikku.pw/static/ranking-icons/SHD.png"></td>
-														<td class="right aligned" id="SH"></td>
-													</tr>
-													<tr>
-														<td><img class="kpw--profile--stats--rank" alt="Ranks A" src="https://kurikku.pw/static/ranking-icons/A.png"></td>
-														<td class="right aligned" id="A"></td>
-													</tr>
 												</tbody>
 											</table>
 											<div class="ui blue progress little margin top" data-percent="{{ levelPercent .level }}">
@@ -245,10 +232,10 @@
 						{{ end }}
 						</div>
 						{{ if hasAdmin $global.Context.User.Privileges }}
-						<div id="chart1" class="ui raised segment">
-							<svg style="height: 250px; width: 100%" class="nvd3-svg">
-							</svg>
-						</div>
+							<div id="chart1" class="ui raised segment">
+								<svg style="height: 250px; width: 100%" class="nvd3-svg">
+								</svg>
+							</div>
 						{{ end }}
 						<div id="scores-zone">
 						{{ range _range 4 }}

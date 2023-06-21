@@ -10,7 +10,6 @@ new Vue({
             reportReason: "Other (type below)",
             reportComment: "",
             allowedToReport: allowed,
-            mode: mode,
             rx: rx,
             reportStatus: 0,
             reportWindow: false

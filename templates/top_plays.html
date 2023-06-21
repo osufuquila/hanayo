@@ -7,11 +7,7 @@ TitleBar=top plays
 {{ $cf := .ClientFlags }}
 {{ $ds := band $cf 1 }}
 <div id="TopPlays">
-	{{ if $ds }}
-		<link rel="stylesheet" href="/static/css/top_plays.dark.css">
-	{{ else }}
-		<link rel="stylesheet" href="/static/css/top_plays.css">
-	{{ end }}
+	<link rel="stylesheet" href="/static/css/top_plays.dark.css">
 	<div class="ui container" v-bind:class="{ 'load' : load }">
 		<div style="display: flex;">
 			<div class="selector">

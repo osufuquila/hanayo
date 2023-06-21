@@ -5,7 +5,7 @@
 			{{ if .UserID }}
 				{{ $gqm := atoi (.Gin.Query "mode") }}
 				{{ $global := . }}
-				{{ with (.Get "users/rxfull?id=%d" .UserID) }}
+				{{ with (.Get "users/full?id=%d" .UserID) }}
 					{{ $favouritemode := _or $gqm .favourite_mode }}
 					<meta property="og:type" content="website" />
 					<meta property="og:url" content="https://ainu.pw/u/{{ .id }}" />
@@ -51,11 +51,15 @@
 										<div class="kpw--info--block">
 											<div class="ui header" style="font-size: 2em;">
 												<p class="ranks">
-													<span class="bgf">{{ .username }}</span>
-													{{ range $k, $v := (slice .std .taiko .ctb .mania) }}
+													{{ if .clan.id }}
+														<span class="bgf"><a href="https://fuquila.net/c/{{ .clan.id }}">[{{ .clan.tag }}]</a> {{ .username }}</span>
+													{{ else }}
+														<span class="bgf">{{ .username }}</span>
+													{{ end }}
+													{{ range $k, $v := (slice .stats.rx.std .stats.rx.taiko .stats.rx.ctb .stats.rx.mania) }}
 													<span class="rank" data-mode="{{ $k }}"{{ if ne $k (int $favouritemode) }} hidden{{ end }}>({{ with and $v $v.global_leaderboard_rank }}#{{ . }}{{ else }}{{ $global.T "Unknown" }}{{ end }})</span>
 													{{ end }}
-													{{ if and (.badges) (.custom_badge) }}
+													{{ if or (.badges) (.custom_badge) }}
 															{{ range .badges }}
 																<span class data-tooltip="{{ .name }}" data-inverted="">
 																	<i class="{{ faIcon .icon }} small icon"></i>
@@ -110,12 +114,12 @@
 								<div class="sixteen wide column">
 									{{ $global.T "<b>%s</b> is a" .username | html}}
 
-									{{ $owner := (has .privileges 3145727) }}
-									{{ $cm := (has .privileges 15662587) }}
-									{{ $admin := (has .privileges 950527) }}
-									{{ $dev := (has .privileges 1043995) }}
+									{{ $owner := (has .privileges 955252735) }}
+									{{ $cm := (has .privileges 942669819) }}
+									{{ $admin := (has .privileges 806257147) }}
+									{{ $mod := (has .privileges 537694459) }}
+									{{ $mod2 := (has .privileges 537694715) }}
 									{{ $bat := (has .privileges 267) }}
-									{{ $member := (has .privileges 3) }}
 									<b>
 										{{ if $owner }}
 										{{ $global.T "Owner" }}
@@ -123,14 +127,13 @@
 										{{ $global.T "Community Manager" }}
 										{{ else if $admin }}
 										{{ $global.T "Admin" }}
-										{{ else if $dev }}
-										{{ $global.T "Developer" }}
+										{{ else if or $mod $mod2 }}
+										{{ $global.T "Moderator" }}
 										{{ else if $bat }}
 										{{ $global.T "BAT" }}
-										{{ else if $member }}
-										{{ $global.T "Player" }}
 										{{ else }}
-										{{end}}
+										{{ $global.T "Player" }}
+										{{ end }}
 									</b>
 									{{ $global.T "from <b>%s</b>." (country .country true) | html }}
 									<br>{{ $global.T "They signed up on %s." (time $user.registered_on) | html }}
@@ -138,7 +141,7 @@
 									<br>{{ with playstyle .play_style $global }}{{ $global.T "They play with %s." . }}{{ end }}
 								</div>
 								<div class="sixteen wide column">
-									{{ range $k, $v := (slice .std .taiko .ctb .mania) }}
+									{{ range $k, $v := (slice .stats.rx.std .stats.rx.taiko .stats.rx.ctb .stats.rx.mania) }}
 									{{ $maxcombo := qb "SELECT FORMAT(scores.max_combo,0) AS combo FROM scores WHERE userid = ? ORDER BY max_combo DESC;" $.UserID}}
 										<div data-mode="{{ $k }}" {{ if ne $k (int $favouritemode) }} hidden{{ end }}>
 											<table class="ui very basic two column compact table nopad">
@@ -189,22 +192,6 @@
 													</tr>									<tr>
 														<td><b>{{ $global.T "Accuracy" }}</b></td>
 														<td class="right aligned">{{ printf "%.2f" .accuracy }}%</td>
-													</tr>
-													<tr>
-														<td><img class="kpw--profile--stats--rank" alt="Ranks SS+" src="https://kurikku.pw/static/ranking-icons/SSHD.png"></td>
-														<td class="right aligned" id="XH"></td>
-													</tr>
-													<tr>
-														<td><img class="kpw--profile--stats--rank" alt="Ranks SS" src="https://kurikku.pw/static/ranking-icons/SS.png"></td>
-														<td class="right aligned" id="X"></td>
-													</tr>
-													<tr>
-														<td><img class="kpw--profile--stats--rank" alt="Ranks S+" src="https://kurikku.pw/static/ranking-icons/SHD.png"></td>
-														<td class="right aligned" id="SH"></td>
-													</tr>
-													<tr>
-														<td><img class="kpw--profile--stats--rank" alt="Ranks A" src="https://kurikku.pw/static/ranking-icons/A.png"></td>
-														<td class="right aligned" id="A"></td>
 													</tr>
 												</tbody>
 											</table>

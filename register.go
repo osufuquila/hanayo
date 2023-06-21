@@ -111,8 +111,8 @@ func registerSubmit(c *gin.Context) {
 		return
 	}
 
-	res, err := db.Exec(`INSERT INTO users(username, username_safe, password_md5, salt, email, register_datetime, privileges, password_version, allowedtoreport)
-							         VALUES (?,           ?,             ?,        '',    ?,       ?,                  ?,     		2, 					1);`,
+	res, err := db.Exec(`INSERT INTO users(username, username_safe, password_md5, salt, email, register_datetime, privileges, password_version)
+							         VALUES (?,           ?,             ?,        '',    ?,       ?,                  ?,     		2);`,
 		username, safeUsername(username), pass, c.PostForm("email"), time.Now().Unix(), common.UserPrivilegePendingVerification)
 	if err != nil {
 		registerResp(c, errorMessage{T(c, "Whoops, an error slipped in. You might have been registered, though. I don't know.")})

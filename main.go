@@ -341,8 +341,13 @@ func generateEngine() *gin.Engine {
 	r.Any("/blog/*url", blogRedirect)
 
 	r.GET("/help", func(c *gin.Context) {
-		c.Redirect(301, "https://discord.gg/Qp3WQU8")
+		c.Redirect(301, "https://discord.gg/zEeU85Kf5r")
 	})
+
+	r.Any("/difficulty-rating", func(c *gin.Context) {
+		c.Redirect(301, "https://osu.ppy.sh/difficulty-rating")
+	})
+
 
 	loadSimplePages(r)
 
